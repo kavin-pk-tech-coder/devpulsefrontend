@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DevPulse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">&#128296; DevPulse</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+        </ul>
+    </nav>
+
+    <!-- LOGIN FORM -->
+    <div class="form-container">
+        <h2>Login</h2>
+
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your username">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password">
+
+        <button onclick="loginUser()">Login</button>
+
+        <div id="msg" class="msg" style="display:none;"></div>
+        <div id="err" class="err" style="display:none;"></div>
+
+        <div class="link-text">
+            Don't have an account? <a href="register.html">Register here</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 DevPulse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function loginUser() {
+            var username = document.getElementById("username").value.trim();
+            var password = document.getElementById("password").value.trim();
+
+            var msgDiv = document.getElementById("msg");
+            var errDiv = document.getElementById("err");
+
+            msgDiv.style.display = "none";
+            errDiv.style.display = "none";
+
+            if (username === "" || password === "") {
+                errDiv.innerText = "Please fill in both fields.";
+                errDiv.style.display = "block";
+                return;
+            }
+
+            fetch("http://localhost:8080/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error("Invalid username or password.");
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                // Save token and user info to localStorage
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("role", data.role);
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("fullName", data.fullName);
+
+                msgDiv.innerText = "Login successful! Redirecting...";
+                msgDiv.style.display = "block";
+
+                setTimeout(function() {
+                    window.location.href = "dashboard.html";
+                }, 1000);
+            })
+            .catch(function(error) {
+                errDiv.innerText = error.message;
+                errDiv.style.display = "block";
+            });
+        }
+    </script>
+
+</body>
+</html>

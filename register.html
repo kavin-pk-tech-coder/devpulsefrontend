@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - DevPulse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">&#128296; DevPulse</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+        </ul>
+    </nav>
+
+    <!-- REGISTER FORM -->
+    <div class="form-container">
+        <h2>Register</h2>
+
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName" placeholder="Enter your full name">
+
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter a username (3-20 characters)">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password (min 6 characters)">
+
+        <label for="role">Role</label>
+        <select id="role">
+            <option value="">-- Select Role --</option>
+            <option value="ROLE_DEVELOPER">Developer</option>
+            <option value="ROLE_MANAGER">Manager</option>
+            <option value="ROLE_ADMIN">Admin</option>
+        </select>
+
+        <button onclick="registerUser()">Register</button>
+
+        <div id="msg" class="msg" style="display:none;"></div>
+        <div id="err" class="err" style="display:none;"></div>
+
+        <div class="link-text">
+            Already have an account? <a href="login.html">Login here</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 DevPulse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function registerUser() {
+            var fullName = document.getElementById("fullName").value.trim();
+            var username = document.getElementById("username").value.trim();
+            var email    = document.getElementById("email").value.trim();
+            var password = document.getElementById("password").value.trim();
+            var role     = document.getElementById("role").value;
+
+            var msgDiv = document.getElementById("msg");
+            var errDiv = document.getElementById("err");
+
+            msgDiv.style.display = "none";
+            errDiv.style.display = "none";
+
+            if (!fullName || !username || !email || !password || !role) {
+                errDiv.innerText = "Please fill in all fields.";
+                errDiv.style.display = "block";
+                return;
+            }
+
+            if (password.length < 6) {
+                errDiv.innerText = "Password must be at least 6 characters.";
+                errDiv.style.display = "block";
+                return;
+            }
+
+            fetch("http://localhost:8080/api/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    fullName: fullName,
+                    username: username,
+                    email: email,
+                    password: password,
+                    role: role
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    return response.text().then(function(text) {
+                        throw new Error(text);
+                    });
+                }
+                return response.json();
+            })
+            .then(function(data) {
+                msgDiv.innerText = data.message + " You can now login.";
+                msgDiv.style.display = "block";
+
+                // Clear the form
+                document.getElementById("fullName").value = "";
+                document.getElementById("username").value = "";
+                document.getElementById("email").value = "";
+                document.getElementById("password").value = "";
+                document.getElementById("role").value = "";
+
+                setTimeout(function() {
+                    window.location.href = "login.html";
+                }, 2000);
+            })
+            .catch(function(error) {
+                errDiv.innerText = error.message;
+                errDiv.style.display = "block";
+            });
+        }
+    </script>
+
+</body>
+</html>

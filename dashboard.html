@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - DevPulse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">&#128296; DevPulse</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><span style="color:#f39c12;" id="nav-username"></span></li>
+            <li><span class="role-badge" id="nav-role"></span></li>
+            <li><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- DASHBOARD CONTENT -->
+    <div class="dashboard-wrapper">
+
+        <h2 id="welcome-msg">Dashboard</h2>
+
+        <!-- STATS ROW -->
+        <div class="stats-row">
+            <div class="stat-box">
+                <h3 id="stat-repos">...</h3>
+                <p>Repositories</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="stat-commits">...</h3>
+                <p>Commits</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="stat-issues">...</h3>
+                <p>Issues</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="stat-prs">...</h3>
+                <p>Pull Requests</p>
+            </div>
+        </div>
+
+        <!-- ================= REPOSITORIES ================= -->
+        <div class="section-title">Repositories</div>
+
+        <div id="repo-form-wrapper">
+            <form class="add-form" id="repo-form">
+                <div class="field">
+                    <label>Repo Name</label>
+                    <input type="text" id="repo-name" placeholder="e.g. devpulse-ui" required>
+                </div>
+                <div class="field">
+                    <label>Platform</label>
+                    <select id="repo-platform">
+                        <option value="GITHUB">GitHub</option>
+                        <option value="GITLAB">GitLab</option>
+                        <option value="BITBUCKET">Bitbucket</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Owner</label>
+                    <input type="text" id="repo-owner" placeholder="e.g. kavinp" required>
+                </div>
+                <div class="field">
+                    <label>Repo URL</label>
+                    <input type="url" id="repo-url" placeholder="https://github.com/owner/repo" required>
+                </div>
+                <button type="submit">+ Add Repository</button>
+                <div class="form-feedback" id="repo-feedback"></div>
+            </form>
+        </div>
+        <div class="permission-note" id="repo-form-restricted" style="display:none;">
+            Only Admins and Developers can add repositories. Managers have read/oversight access only.
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Platform</th>
+                    <th>Owner</th>
+                    <th>URL</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="repo-table-body">
+                <tr><td colspan="6">Loading...</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ================= COMMITS ================= -->
+        <div class="section-title">Recent Commits</div>
+
+        <form class="add-form" id="commit-form">
+            <div class="field">
+                <label>Repository</label>
+                <select id="commit-repo" required>
+                    <option value="">Select repository...</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Commit Hash</label>
+                <input type="text" id="commit-hash" placeholder="e.g. a1b2c3d" required>
+            </div>
+            <div class="field">
+                <label>Message</label>
+                <input type="text" id="commit-message" placeholder="e.g. Fix login bug" required>
+            </div>
+            <div class="field">
+                <label>Author</label>
+                <input type="text" id="commit-author" placeholder="e.g. kavinp" required>
+            </div>
+            <button type="submit">+ Add Commit</button>
+            <div class="form-feedback" id="commit-feedback"></div>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Hash</th>
+                    <th>Message</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="commit-table-body">
+                <tr><td colspan="5">Loading...</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ================= ISSUES ================= -->
+        <div class="section-title">Issues</div>
+
+        <form class="add-form" id="issue-form">
+            <div class="field">
+                <label>Repository</label>
+                <select id="issue-repo" required>
+                    <option value="">Select repository...</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Title</label>
+                <input type="text" id="issue-title" placeholder="e.g. Login redirect bug" required>
+            </div>
+            <div class="field">
+                <label>Status</label>
+                <select id="issue-status">
+                    <option value="OPEN">Open</option>
+                    <option value="CLOSED">Closed</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Priority</label>
+                <select id="issue-priority">
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                </select>
+            </div>
+            <button type="submit">+ Add Issue</button>
+            <div class="form-feedback" id="issue-feedback"></div>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="issue-table-body">
+                <tr><td colspan="5">Loading...</td></tr>
+            </tbody>
+        </table>
+
+        <!-- ================= PULL REQUESTS ================= -->
+        <div class="section-title">Pull Requests</div>
+
+        <form class="add-form" id="pr-form">
+            <div class="field">
+                <label>Repository</label>
+                <select id="pr-repo" required>
+                    <option value="">Select repository...</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Title</label>
+                <input type="text" id="pr-title" placeholder="e.g. Add dashboard forms" required>
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <input type="text" id="pr-description" placeholder="Short description">
+            </div>
+            <button type="submit">+ Add Pull Request</button>
+            <div class="form-feedback" id="pr-feedback"></div>
+        </form>
+        <div class="permission-note" id="pr-merge-restricted" style="display:none;">
+            Only Managers and Admins can merge or reject pull requests. As a Developer, you can create PRs but review/merge is handled by your Manager or Admin.
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="pr-table-body">
+                <tr><td colspan="5">Loading...</td></tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 DevPulse. All rights reserved.</p>
+    </footer>
+
+    <script>
+        var BASE_URL = "http://localhost:8080/api";
+
+        // Check if user is logged in
+        var token = localStorage.getItem("token");
+        if (!token) {
+            window.location.href = "login.html";
+        }
+
+        // Show username in nav
+        var username = localStorage.getItem("username");
+        var fullName = localStorage.getItem("fullName");
+        var role = localStorage.getItem("role") || "";
+        document.getElementById("nav-username").innerText = fullName || username;
+        document.getElementById("welcome-msg").innerText = "Welcome, " + (fullName || username) + "!";
+
+        // ============================================================
+        // ROLE-BASED PERMISSIONS
+        // (Mirrors the @PreAuthorize rules enforced on the backend, so the
+        // UI only shows actions a role is actually allowed to perform.)
+        // ============================================================
+        var isAdmin = role === "ROLE_ADMIN";
+        var isDeveloper = role === "ROLE_DEVELOPER";
+        var isManager = role === "ROLE_MANAGER";
+
+        // POST /api/repositories and DELETE /api/repositories/{id} are both
+        // @PreAuthorize("hasRole('ADMIN') or hasRole('DEVELOPER')") -> Manager excluded.
+        var canManageRepos = isAdmin || isDeveloper;
+
+        // PUT /api/pullrequests/{id}/merge and /reject are both
+        // @PreAuthorize("hasRole('MANAGER') or hasRole('ADMIN')") -> Developer excluded.
+        var canReviewPullRequests = isAdmin || isManager;
+
+        var roleLabels = {
+            "ROLE_ADMIN": "Admin",
+            "ROLE_DEVELOPER": "Developer",
+            "ROLE_MANAGER": "Manager"
+        };
+        document.getElementById("nav-role").innerText = roleLabels[role] || role;
+
+        // Hide the "Add Repository" form for Managers (read/oversight role only).
+        if (!canManageRepos) {
+            document.getElementById("repo-form-wrapper").style.display = "none";
+            document.getElementById("repo-form-restricted").style.display = "block";
+        }
+
+        // Show a note for Developers explaining they cannot merge/reject PRs.
+        if (!canReviewPullRequests) {
+            document.getElementById("pr-merge-restricted").style.display = "block";
+        }
+
+        function friendlyErrorFromResponse(res, fallbackMessage) {
+            return res.text().then(function(t) {
+                if (res.status === 403) {
+                    return "You do not have permission to perform this action.";
+                }
+                return t || fallbackMessage;
+            });
+        }
+
+        function getHeaders() {
+            return {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            };
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+
+        function showFeedback(id, message, isError) {
+            var el = document.getElementById(id);
+            el.innerText = message;
+            el.className = "form-feedback " + (isError ? "error" : "ok");
+            setTimeout(function() {
+                el.innerText = "";
+                el.className = "form-feedback";
+            }, 4000);
+        }
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        // ============================================================
+        // REPOSITORIES
+        // ============================================================
+        function loadRepositories() {
+            // Use the "owned" endpoint so each Developer only sees their own
+            // repositories (Admin/Manager still see everything). This keeps
+            // one user's additions/edits from leaking into another user's view.
+            fetch(BASE_URL + "/repositories/owned", { headers: getHeaders() })
+            .then(function(res) {
+                if (!res.ok) { throw new Error("HTTP " + res.status); }
+                return res.json();
+            })
+            .then(function(data) {
+                document.getElementById("stat-repos").innerText = data.length;
+
+                var tbody = document.getElementById("repo-table-body");
+                if (data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='6'>No repositories found.</td></tr>";
+                } else {
+                    var html = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var r = data[i];
+                        html += "<tr>";
+                        html += "<td>" + r.id + "</td>";
+                        html += "<td>" + escapeHtml(r.repoName) + "</td>";
+                        html += "<td>" + escapeHtml(r.platform) + "</td>";
+                        html += "<td>" + escapeHtml(r.owner) + "</td>";
+                        html += "<td><a href='" + r.repoUrl + "' target='_blank'>" + escapeHtml(r.repoUrl) + "</a></td>";
+                        html += "<td>";
+                        if (canManageRepos) {
+                            html += "<button class='btn-small' onclick='deleteRepository(" + r.id + ")'>Delete</button>";
+                        } else {
+                            html += "&mdash;";
+                        }
+                        html += "</td>";
+                        html += "</tr>";
+                    }
+                    tbody.innerHTML = html;
+                }
+
+                // Populate repository dropdowns used by other forms
+                var selects = [
+                    document.getElementById("commit-repo"),
+                    document.getElementById("issue-repo"),
+                    document.getElementById("pr-repo")
+                ];
+                selects.forEach(function(sel) {
+                    var current = sel.value;
+                    sel.innerHTML = "<option value=''>Select repository...</option>";
+                    for (var i = 0; i < data.length; i++) {
+                        var opt = document.createElement("option");
+                        opt.value = data[i].id;
+                        opt.innerText = data[i].repoName;
+                        sel.appendChild(opt);
+                    }
+                    sel.value = current;
+                });
+            })
+            .catch(function() {
+                document.getElementById("stat-repos").innerText = "0";
+                document.getElementById("repo-table-body").innerHTML = "<tr><td colspan='6'>Could not load repositories.</td></tr>";
+            });
+        }
+
+        document.getElementById("repo-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var body = {
+                repoName: document.getElementById("repo-name").value.trim(),
+                platform: document.getElementById("repo-platform").value,
+                owner: document.getElementById("repo-owner").value.trim(),
+                repoUrl: document.getElementById("repo-url").value.trim()
+            };
+            fetch(BASE_URL + "/repositories", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify(body)
+            })
+            .then(function(res) {
+                if (!res.ok) { return friendlyErrorFromResponse(res, "Failed to add repository").then(function(msg) { throw new Error(msg); }); }
+                return res.text();
+            })
+            .then(function() {
+                showFeedback("repo-feedback", "Repository added successfully.", false);
+                document.getElementById("repo-form").reset();
+                loadRepositories();
+            })
+            .catch(function(err) {
+                showFeedback("repo-feedback", "Error: " + err.message, true);
+            });
+        });
+
+        function deleteRepository(id) {
+            if (!confirm("Delete this repository? This cannot be undone.")) return;
+            fetch(BASE_URL + "/repositories/" + id, {
+                method: "DELETE",
+                headers: getHeaders()
+            })
+            .then(function(res) {
+                if (!res.ok) { return friendlyErrorFromResponse(res, "Failed to delete repository").then(function(msg) { throw new Error(msg); }); }
+                loadRepositories();
+                loadCommits();
+                loadIssues();
+                loadPullRequests();
+            })
+            .catch(function(err) {
+                alert(err.message || "Could not delete repository.");
+            });
+        }
+
+        // ============================================================
+        // COMMITS
+        // ============================================================
+        function loadCommits() {
+            fetch(BASE_URL + "/commits", { headers: getHeaders() })
+            .then(function(res) {
+                if (!res.ok) { throw new Error("HTTP " + res.status); }
+                return res.json();
+            })
+            .then(function(data) {
+                document.getElementById("stat-commits").innerText = data.length;
+                var tbody = document.getElementById("commit-table-body");
+                if (data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='5'>No commits found.</td></tr>";
+                    return;
+                }
+                var html = "";
+                for (var i = 0; i < data.length; i++) {
+                    var c = data[i];
+                    html += "<tr>";
+                    html += "<td>" + c.id + "</td>";
+                    html += "<td>" + escapeHtml(c.commitHash) + "</td>";
+                    html += "<td>" + escapeHtml(c.message) + "</td>";
+                    html += "<td>" + escapeHtml(c.author) + "</td>";
+                    html += "<td>" + escapeHtml(c.status) + "</td>";
+                    html += "</tr>";
+                }
+                tbody.innerHTML = html;
+            })
+            .catch(function() {
+                document.getElementById("stat-commits").innerText = "0";
+                document.getElementById("commit-table-body").innerHTML = "<tr><td colspan='5'>Could not load commits.</td></tr>";
+            });
+        }
+
+        document.getElementById("commit-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var repoId = document.getElementById("commit-repo").value;
+            if (!repoId) {
+                showFeedback("commit-feedback", "Please add a repository first and select it.", true);
+                return;
+            }
+            var body = {
+                repositoryId: parseInt(repoId, 10),
+                commitHash: document.getElementById("commit-hash").value.trim(),
+                message: document.getElementById("commit-message").value.trim(),
+                author: document.getElementById("commit-author").value.trim()
+            };
+            fetch(BASE_URL + "/commits", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify(body)
+            })
+            .then(function(res) {
+                if (!res.ok) { return res.text().then(function(t) { throw new Error(t || "Failed to add commit"); }); }
+                return res.json();
+            })
+            .then(function() {
+                showFeedback("commit-feedback", "Commit added successfully.", false);
+                document.getElementById("commit-form").reset();
+                loadCommits();
+            })
+            .catch(function(err) {
+                showFeedback("commit-feedback", "Error: " + err.message, true);
+            });
+        });
+
+        // ============================================================
+        // ISSUES
+        // ============================================================
+        function loadIssues() {
+            fetch(BASE_URL + "/issues", { headers: getHeaders() })
+            .then(function(res) {
+                if (!res.ok) { throw new Error("HTTP " + res.status); }
+                return res.json();
+            })
+            .then(function(data) {
+                document.getElementById("stat-issues").innerText = data.length;
+                var tbody = document.getElementById("issue-table-body");
+                if (data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='5'>No issues found.</td></tr>";
+                    return;
+                }
+                var html = "";
+                for (var i = 0; i < data.length; i++) {
+                    var iss = data[i];
+                    html += "<tr>";
+                    html += "<td>" + iss.id + "</td>";
+                    html += "<td>" + escapeHtml(iss.title) + "</td>";
+                    html += "<td>" + escapeHtml(iss.status) + "</td>";
+                    html += "<td>" + escapeHtml(iss.priority) + "</td>";
+                    html += "<td><button class='btn-small' onclick='deleteIssue(" + iss.id + ")'>Delete</button></td>";
+                    html += "</tr>";
+                }
+                tbody.innerHTML = html;
+            })
+            .catch(function() {
+                document.getElementById("stat-issues").innerText = "0";
+                document.getElementById("issue-table-body").innerHTML = "<tr><td colspan='5'>Could not load issues.</td></tr>";
+            });
+        }
+
+        document.getElementById("issue-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var repoId = document.getElementById("issue-repo").value;
+            if (!repoId) {
+                showFeedback("issue-feedback", "Please add a repository first and select it.", true);
+                return;
+            }
+            var body = {
+                title: document.getElementById("issue-title").value.trim(),
+                status: document.getElementById("issue-status").value,
+                priority: document.getElementById("issue-priority").value,
+                repository: { id: parseInt(repoId, 10) }
+            };
+            fetch(BASE_URL + "/issues", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify(body)
+            })
+            .then(function(res) {
+                if (!res.ok) { return res.text().then(function(t) { throw new Error(t || "Failed to add issue"); }); }
+                return res.json();
+            })
+            .then(function() {
+                showFeedback("issue-feedback", "Issue added successfully.", false);
+                document.getElementById("issue-form").reset();
+                loadIssues();
+            })
+            .catch(function(err) {
+                showFeedback("issue-feedback", "Error: " + err.message, true);
+            });
+        });
+
+        function deleteIssue(id) {
+            if (!confirm("Delete this issue?")) return;
+            fetch(BASE_URL + "/issues/" + id, {
+                method: "DELETE",
+                headers: getHeaders()
+            })
+            .then(function(res) {
+                if (!res.ok) { throw new Error("Failed to delete"); }
+                loadIssues();
+            })
+            .catch(function() {
+                alert("Could not delete issue.");
+            });
+        }
+
+        // ============================================================
+        // PULL REQUESTS
+        // ============================================================
+        function loadPullRequests() {
+            fetch(BASE_URL + "/pullrequests", { headers: getHeaders() })
+            .then(function(res) {
+                if (!res.ok) { throw new Error("HTTP " + res.status); }
+                return res.json();
+            })
+            .then(function(data) {
+                document.getElementById("stat-prs").innerText = data.length;
+                var tbody = document.getElementById("pr-table-body");
+                if (data.length === 0) {
+                    tbody.innerHTML = "<tr><td colspan='5'>No pull requests found.</td></tr>";
+                    return;
+                }
+                var html = "";
+                for (var i = 0; i < data.length; i++) {
+                    var pr = data[i];
+                    var date = pr.createdAt ? pr.createdAt[0] + "-" + pr.createdAt[1] + "-" + pr.createdAt[2] : "N/A";
+                    html += "<tr>";
+                    html += "<td>" + pr.id + "</td>";
+                    html += "<td>" + escapeHtml(pr.title) + "</td>";
+                    html += "<td>" + escapeHtml(pr.status) + "</td>";
+                    html += "<td>" + date + "</td>";
+                    html += "<td>";
+                    if (pr.status !== "MERGED" && pr.status !== "REJECTED") {
+                        if (canReviewPullRequests) {
+                            html += "<button class='btn-small btn-merge' onclick='mergePullRequest(" + pr.id + ")'>Merge</button>";
+                            html += "<button class='btn-small btn-reject' onclick='rejectPullRequest(" + pr.id + ")'>Reject</button>";
+                        } else {
+                            html += "<span style='color:#999; font-size:12px;'>Awaiting Manager/Admin review</span>";
+                        }
+                    } else {
+                        html += "&mdash;";
+                    }
+                    html += "</td>";
+                    html += "</tr>";
+                }
+                tbody.innerHTML = html;
+            })
+            .catch(function() {
+                document.getElementById("stat-prs").innerText = "0";
+                document.getElementById("pr-table-body").innerHTML = "<tr><td colspan='5'>Could not load pull requests.</td></tr>";
+            });
+        }
+
+        document.getElementById("pr-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+            var repoId = document.getElementById("pr-repo").value;
+            if (!repoId) {
+                showFeedback("pr-feedback", "Please add a repository first and select it.", true);
+                return;
+            }
+            var body = {
+                title: document.getElementById("pr-title").value.trim(),
+                description: document.getElementById("pr-description").value.trim(),
+                repositoryId: parseInt(repoId, 10)
+            };
+            fetch(BASE_URL + "/pullrequests", {
+                method: "POST",
+                headers: getHeaders(),
+                body: JSON.stringify(body)
+            })
+            .then(function(res) {
+                if (!res.ok) { return res.text().then(function(t) { throw new Error(t || "Failed to add pull request"); }); }
+                return res.json();
+            })
+            .then(function() {
+                showFeedback("pr-feedback", "Pull request added successfully.", false);
+                document.getElementById("pr-form").reset();
+                loadPullRequests();
+            })
+            .catch(function(err) {
+                showFeedback("pr-feedback", "Error: " + err.message, true);
+            });
+        });
+
+        function mergePullRequest(id) {
+            fetch(BASE_URL + "/pullrequests/" + id + "/merge", {
+                method: "PUT",
+                headers: getHeaders()
+            })
+            .then(function(res) {
+                if (!res.ok) { return friendlyErrorFromResponse(res, "Failed to merge (Manager/Admin role required)").then(function(msg) { throw new Error(msg); }); }
+                return res.json();
+            })
+            .then(function() {
+                loadPullRequests();
+            })
+            .catch(function(err) {
+                alert(err.message);
+            });
+        }
+
+        function rejectPullRequest(id) {
+            fetch(BASE_URL + "/pullrequests/" + id + "/reject", {
+                method: "PUT",
+                headers: getHeaders()
+            })
+            .then(function(res) {
+                if (!res.ok) { return friendlyErrorFromResponse(res, "Failed to reject (Manager/Admin role required)").then(function(msg) { throw new Error(msg); }); }
+                return res.json();
+            })
+            .then(function() {
+                loadPullRequests();
+            })
+            .catch(function(err) {
+                alert(err.message);
+            });
+        }
+
+        // ============================================================
+        // INITIAL LOAD
+        // ============================================================
+        loadRepositories();
+        loadCommits();
+        loadIssues();
+        loadPullRequests();
+
+    </script>
+
+</body>
+</html>

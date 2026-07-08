@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - DevPulse</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="index.html" class="logo">&#128296; DevPulse</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+        </ul>
+    </nav>
+
+    <!-- ABOUT CONTENT -->
+    <div class="about-section">
+
+        <h2>About DevPulse</h2>
+        <p>
+            DevPulse is a developer productivity and repository management system built to help
+            software teams track their work more effectively. It brings together commit activity,
+            pull request management, issue tracking and analytics into a single platform.
+        </p>
+
+        <p>
+            The system is designed for three types of users — Admins, Managers and Developers.
+            Each role has its own set of permissions and views so that the right people see the
+            right information. Admins can manage users and view system statistics, Managers can
+            approve or reject pull requests, and Developers can log their work and track progress.
+        </p>
+
+        <p>
+            The backend is built with Spring Boot and uses JWT based authentication to keep all
+            API endpoints secure. The database is MySQL and all data is stored and managed using
+            Spring Data JPA. The system follows a clean layered architecture with separate entity,
+            repository, service and controller packages.
+        </p>
+
+        <h2 style="margin-top: 30px;">Technology Stack</h2>
+        <p>
+            <strong>Backend:</strong> Java 17, Spring Boot 3, Spring Security, JWT (HS512), MySQL, Spring Data JPA, Maven<br><br>
+            <strong>Frontend:</strong> HTML, CSS, JavaScript (Vanilla)<br><br>
+            <strong>Tools:</strong> Postman (API Testing), MySQL Workbench, VS Code
+        </p>
+
+        <h2 style="margin-top: 30px;">Project Features</h2>
+        <p>
+            &#9989; User registration and login with role assignment<br>
+            &#9989; JWT token generation and validation<br>
+            &#9989; Repository linking for GitHub and GitLab<br>
+            &#9989; Commit activity logging with auto-generated commit hash<br>
+            &#9989; Pull request creation, merge and reject workflow<br>
+            &#9989; Issue tracking with status and priority levels<br>
+            &#9989; Developer productivity score calculation<br>
+            &#9989; Admin panel with system stats<br>
+            &#9989; Analytics reports for team, repository and activity
+        </p>
+
+        <h2 style="margin-top: 30px;">Our Team</h2>
+
+        <div class="team-cards">
+
+            <div class="team-card">
+                <div class="avatar">K</div>
+                <strong>Kavin</strong>
+                <p>Full Stack Developer</p>
+            </div>
+
+            <div class="team-card">
+                <div class="avatar">&#128187;</div>
+                <strong>Backend Team</strong>
+                <p>Spring Boot / MySQL</p>
+            </div>
+
+            <div class="team-card">
+                <div class="avatar">&#127760;</div>
+                <strong>Frontend Team</strong>
+                <p>HTML / CSS / JS</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>&copy; 2024 DevPulse. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
